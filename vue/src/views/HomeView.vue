@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <h1>Theater Events</h1>
+    <h2>Upcoming Events</h2>
     <button @click="$router.push('/create-event')">Create New Event</button>
     <div class="event-list">
       <EventCard v-for="event in events" :key="event.id" :event="event" />
