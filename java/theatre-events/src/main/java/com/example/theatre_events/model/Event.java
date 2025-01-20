@@ -33,11 +33,31 @@ public class Event {
     @Column(nullable = false, columnDefinition = "TIMESTAMP")
     private LocalDateTime createdAt = LocalDateTime.now();
 
+    @Column(length = 500) // To store event link
+    private String eventLink;
+
+    @Column(length = 100) // To store ticket price
+    private String ticketPrice;
+
     @OneToMany(mappedBy = "event", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference // Manages serialization of the relationship
     private List<Showtime> showtimes;
 
+    public String getEventLink() {
+        return eventLink;
+    }
 
+    public void setEventLink(String eventLink) {
+        this.eventLink = eventLink;
+    }
+
+    public String getTicketPrice() {
+        return ticketPrice;
+    }
+
+    public void setTicketPrice(String ticketPrice) {
+        this.ticketPrice = ticketPrice;
+    }
 
     public Long getId() {
         return id;

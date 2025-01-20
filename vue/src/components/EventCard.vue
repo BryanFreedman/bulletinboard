@@ -1,35 +1,56 @@
 <template>
-    <div class="event-card" @click="$router.push(`/event/${event.id}`)">
-      <h2>{{ event.title }}</h2>
-      <p>{{ event.location }}</p>
+  <div class="event-card">
+    <h2>{{ event.title }}</h2>
+    <p>{{ event.description }}</p>
+    <p><strong>Location:</strong> {{ event.location }}</p>
+    <p><strong>Company:</strong> {{ event.companyName }}</p>
+    <p><strong>Ticket Price:</strong> {{ event.ticketPrice }}</p>
+    <a :href="event.eventLink" target="_blank" rel="noopener noreferrer" class="event-link">
+      View Event
+    </a>
+    <div class="showtimes">
+      <h4>Showtimes</h4>
       <ul>
-        <li v-for="showtime in event.showtimes" :key="showtime.date + showtime.time">
-          {{ showtime.date }} - {{ showtime.time }}
+        <li v-for="(showtime, index) in event.showtimes" :key="index">
+          {{ formatDateTime(showtime.date, showtime.time) }}
         </li>
       </ul>
     </div>
-  </template>
-  
-  <script>
-  export default {
-    name: 'EventCard',
-    props: {
-      event: Object,
+  </div>
+</template>
+
+<script>
+export default {
+  name: "EventCard",
+  props: {
+    event: {
+      type: Object,
+      required: true,
     },
-  };
-  </script>
-  
-  <style>
-  .event-card {
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    padding: 16px;
-    cursor: pointer;
-    transition: transform 0.2s;
-  }
-  
-  .event-card:hover {
-    transform: scale(1.02);
-  }
-  </style>
-  
+  },
+  methods: {
+    formatDateTime(date, time) {
+      return `${date} at ${time}`;
+    },
+  },
+};
+</script>
+
+<style scoped>
+.event-card {
+  border: 1px solid #ddd;
+  padding: 16px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  background-color: #fff;
+}
+
+.event-link {
+  color: #007bff;
+  text-decoration: none;
+}
+
+.event-link:hover {
+  text-decoration: underline;
+}
+</style>

@@ -1,39 +1,45 @@
 <template>
   <div class="home">
-    <h2>Upcoming Events</h2>
+    <h1>Theater Events</h1>
     <button @click="$router.push('/create-event')">Create New Event</button>
-    <div class="event-list">
+    <div v-if="loading" class="loading">Loading events...</div>
+    <div v-if="!loading && events.length === 0" class="no-events">No events found.</div>
+    <div v-if="!loading" class="event-list">
       <EventCard v-for="event in events" :key="event.id" :event="event" />
     </div>
   </div>
 </template>
 
 <script>
-import EventCard from '../components/EventCard.vue';
+import EventCard from "@/components/EventCard.vue";
+import axios from "axios";
 
 export default {
-  name: 'Home',
+  name: "Home",
   components: { EventCard },
   data() {
     return {
-      events: [], // Replace with API call later
+      events: [],
+      loading: true,
     };
   },
-  mounted() {
-    // Simulate fetching events
-    this.events = [
-      {
-        id: 1,
-        title: 'Hamlet',
-        location: 'Shakespeare Theatre',
-        showtimes: [{ date: '2025-02-01', time: '19:00' }],
-      },
-    ];
+  async mounted() {
+    try {
+      const response = await axios.get("http://localhost:8080/events");
+      
+      // Filter events with status "Approved"
+      this.events = response.data.filter(event => event.status === "Approved");
+    } catch (error) {
+      console.error("Error fetching events:", error);
+    } finally {
+      this.loading = false;
+    }
   },
 };
 </script>
 
-<style>
+
+<style scoped>
 .home {
   padding: 16px;
 }
@@ -42,5 +48,12 @@ export default {
   display: flex;
   flex-wrap: wrap;
   gap: 16px;
+}
+
+.loading,
+.no-events {
+  text-align: center;
+  font-size: 18px;
+  color: #555;
 }
 </style>
