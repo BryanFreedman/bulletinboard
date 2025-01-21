@@ -1,7 +1,7 @@
 <template>
   <div class="home">
     <h1>Upcoming Events</h1> 
-    <button @click="$router.push('/create-event')">Create New Event</button>
+    <button @click="$router.push('/create-event')">Submit New Event</button>
     <div v-if="loading" class="loading">Loading events...</div>
     <div v-if="!loading && events.length === 0" class="no-events">No events found.</div>
     <div v-if="!loading" class="event-list">
@@ -58,31 +58,44 @@ export default {
 <style scoped>
 .home {
   padding: 16px;
+  display: flex; /* Enable flexbox */
+  flex-direction: column; /* Stack children vertically */
+  align-items: center; /* Center-align children horizontally */
 }
 
 h1 {
-  margin-top: 0; /* Remove top margin from the h1 */
-  margin-bottom: 16px; /* Add controlled space below the heading */
+  margin-top: 0;
+  margin-bottom: 16px;
+  color: #000; /* Make the text color contrast well */
+  background-image: url('@/assets/images/masking-tape-crop.png');
+  background-size: cover; /* Ensure the image scales to fit */
+  background-repeat: no-repeat; /* Prevent repetition */
+  background-position: center; /* Center the image */
+  padding: 12px 16px; /* Add spacing around the text */
+  /* border-radius: 8px; Add slight rounding to the edges */
+  display: inline-block; /* Wrap the content to only the heading's size */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Optional: Add a shadow for emphasis */
 }
 
+
+
 button {
-  margin: 0 auto; /* Centers the button */
   margin-bottom: 24px; /* Adds spacing below the button */
-  display: inline-block;
-  background-color: #007bff;
-  color: #ffffff;
+  background-color: #ffec80;
+  color: #000000;
   padding: 12px 24px;
   font-size: 1.2rem;
   font-weight: bold;
   border: none;
-  border-radius: 8px;
   cursor: pointer;
   transition: background-color 0.3s ease, transform 0.2s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Optional: Add shadow for emphasis */
 }
 
 
+
 button:hover {
-  background-color: #0056b3;
+  background-color: #FED800;
   transform: scale(1.05);
 }
 

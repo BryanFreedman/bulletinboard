@@ -91,77 +91,83 @@ export default {
 
 <style scoped>
 .event-form {
-  padding: 16px;
-  max-width: 600px;
-  margin: auto;
-  background-color: #f9f9f9;
-  border: 1px solid #ddd;
-  border-radius: 8px;
+  padding: 32px; /* Increase padding to provide space inside the form */
+  max-width: 600px; /* Set a specific maximum width for the form */
+  margin: 32px auto; /* Center the form and add vertical margin */
+  background-color: #f9f9f9; /* Set the background color */
+  
+  border: 1px solid #ddd; /* Add a border around the form */
+  /* border-radius: 8px; Round the corners for a polished look */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
 }
 
 .event-form input,
 .event-form textarea {
-  display: block;
-  width: 100%;
-  margin-bottom: 12px;
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+  display: block; /* Ensure each field starts on a new line */
+  width: calc(100% - 32px); /* Reduce width slightly to account for padding */
+  margin-bottom: 16px; /* Add spacing between fields */
+  padding: 12px; /* Add inner padding for text fields */
+  border: 1px solid #ccc; /* Add a light border */
+  border-radius: 4px; /* Round the corners of input fields */
+  box-sizing: border-box; /* Include padding and border in width calculation */
+  font-family: Arial, Helvetica, sans-serif;
 }
 
 .showtime-input {
   display: flex;
-  gap: 8px;
-  margin-bottom: 8px;
+  gap: 16px; /* Increase spacing between date and time fields */
+  margin-bottom: 16px; /* Add spacing below each showtime input */
+  font-family: Arial, Helvetica, sans-serif;
 }
 
 button {
-  padding: 8px 16px;
-  background-color: #007bff;
-  color: #fff;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
+  padding: 12px 24px; /* Add padding for better clickability */
+  background-color: #007bff; /* Primary button color */
+  color: #fff; /* White text color */
+  border: none; /* Remove default borders */
+  border-radius: 8px; /* Round the corners of buttons */
+  cursor: pointer; /* Change the cursor to a pointer on hover */
+  transition: background-color 0.3s ease, transform 0.2s ease; /* Smooth transitions */
 }
 
 button:hover {
-  background-color: #0056b3;
+  background-color: #0056b3; /* Darken the button color on hover */
 }
 
 button[type='button'] {
-  background-color: #dc3545;
-  margin-left: 8px;
+  background-color: #dc3545; /* Red background for remove buttons */
+  margin-left: 8px; /* Add spacing to the left */
 }
 
 button[type='button']:hover {
-  background-color: #c82333;
+  background-color: #c82333; /* Darker red on hover */
 }
 
 button[type='submit'] {
-  display: block;
-  width: 200px;
-  margin: 16px auto 0; /* Add padding above */
-  padding: 12px 24px;
-  font-size: 1.2rem;
-  font-weight: bold;
-  background-color: #28a745;
-  color: #fff;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.2s ease;
+  display: block; /* Center the submit button */
+  width: 200px; /* Set a fixed width */
+  margin: 32px auto 0; /* Center horizontally and add space above */
+  padding: 16px; /* Add more padding for larger appearance */
+  font-size: 1.2rem; /* Increase font size */
+  font-weight: bold; /* Make the text bold */
+  background-color: #28a745; /* Green background */
+  color: #fff; /* White text color */
+  border: none; /* Remove borders */
+  border-radius: 8px; /* Round the corners */
+  transition: background-color 0.3s ease, transform 0.2s ease; /* Smooth transitions */
 }
 
 button[type='submit']:hover {
-  background-color: #218838;
+  background-color: #218838; /* Darker green on hover */
 }
 
 button[type='submit']:active {
-  transform: scale(0.95);
+  transform: scale(0.95); /* Add a slight "pressed" effect */
 }
 
 .submit-container {
-  margin-top: 32px; /* Padding between Add Showtime and Submit */
-  text-align: center;
+  margin-top: 32px; /* Add spacing above the submit button */
+  text-align: center; /* Center-align the button */
 }
+
 </style>

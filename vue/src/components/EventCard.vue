@@ -1,5 +1,6 @@
 <template>
   <div class="event-card">
+    <div class="pushpin"></div>
     <h2>{{ event.title }}</h2>
     <p>{{ event.description }}</p>
     <p><strong>Location:</strong> {{ event.location }}</p>
@@ -35,41 +36,70 @@ export default {
   },
   methods: {
     formatShowtime(date, time) {
-  // Parse the date string without applying time zone adjustments
-  const dateParts = date.split("-");
-  const localDate = new Date(dateParts[0], dateParts[1] - 1, dateParts[2]); // year, month (0-indexed), day
+      const dateParts = date.split("-");
+      const localDate = new Date(dateParts[0], dateParts[1] - 1, dateParts[2]);
 
-  // Format the date as "25 January 2025"
-  const options = { year: "numeric", month: "long", day: "numeric" };
-  const formattedDate = localDate.toLocaleDateString("en-US", options);
+      const options = { year: "numeric", month: "long", day: "numeric" };
+      const formattedDate = localDate.toLocaleDateString("en-US", options);
 
-  // Format the time as "hh:mm am/pm"
-  const formattedTime = new Date(`1970-01-01T${time}`).toLocaleTimeString("en-US", {
-    hour: "2-digit",
-    minute: "2-digit",
-    hour12: true,
-  });
+      const formattedTime = new Date(`1970-01-01T${time}`).toLocaleTimeString("en-US", {
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: true,
+      });
 
-  return `${formattedDate} at ${formattedTime}`;
-}
-
+      return `${formattedDate} at ${formattedTime}`;
+    },
   },
 };
 </script>
 
 <style scoped>
 .event-card {
+  position: relative; /* For positioning the pushpin */
   padding: 16px;
   border: 1px solid #ddd;
-  border-radius: 8px;
+  /* border-radius: 12px; */
   background-color: #fff;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   margin-bottom: 16px;
   max-width: 400px;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.event-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+.pushpin {
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 24px;
+  height: 24px;
+  background-color: #dc3545; /* Red pushpin color */
+  border-radius: 50%;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  border: 2px solid #fff;
+  z-index: 1;
+}
+
+.pushpin::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 6px;
+  height: 6px;
+  background-color: #fff;
+  border-radius: 50%;
 }
 
 .event-card h2 {
-  margin-top: 0;
+  margin-top: 24px; /* Account for pushpin overlap */
   font-size: 1.5em;
   color: #000000;
 }
