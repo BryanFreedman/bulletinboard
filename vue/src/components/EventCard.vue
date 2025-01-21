@@ -5,14 +5,19 @@
     <p><strong>Location:</strong> {{ event.location }}</p>
     <p><strong>Company:</strong> {{ event.companyName }}</p>
     <p><strong>Ticket Price:</strong> {{ event.ticketPrice }}</p>
-    <a :href="event.eventLink" target="_blank" rel="noopener noreferrer" class="event-link">
-      View Event
-    </a>
-    <div class="showtimes">
-      <h4>Showtimes</h4>
+
+    <!-- Event Link -->
+    <p v-if="event.eventLink">
+      <strong>Link: </strong>
+      <a :href="event.eventLink" target="_blank" rel="noopener noreferrer">{{ event.eventLink }}</a>
+    </p>
+
+    <!-- Showtimes -->
+    <div>
+      <strong>Showtimes:</strong>
       <ul>
         <li v-for="(showtime, index) in event.showtimes" :key="index">
-          {{ formatDateTime(showtime.date, showtime.time) }}
+          {{ formatShowtime(showtime.date, showtime.time) }}
         </li>
       </ul>
     </div>
@@ -29,28 +34,68 @@ export default {
     },
   },
   methods: {
-    formatDateTime(date, time) {
-      return `${date} at ${time}`;
-    },
+    formatShowtime(date, time) {
+  // Parse the date string without applying time zone adjustments
+  const dateParts = date.split("-");
+  const localDate = new Date(dateParts[0], dateParts[1] - 1, dateParts[2]); // year, month (0-indexed), day
+
+  // Format the date as "25 January 2025"
+  const options = { year: "numeric", month: "long", day: "numeric" };
+  const formattedDate = localDate.toLocaleDateString("en-US", options);
+
+  // Format the time as "hh:mm am/pm"
+  const formattedTime = new Date(`1970-01-01T${time}`).toLocaleTimeString("en-US", {
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: true,
+  });
+
+  return `${formattedDate} at ${formattedTime}`;
+}
+
   },
 };
 </script>
 
 <style scoped>
 .event-card {
-  border: 1px solid #ddd;
   padding: 16px;
+  border: 1px solid #ddd;
   border-radius: 8px;
-  margin-bottom: 16px;
   background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 16px;
+  max-width: 400px;
 }
 
-.event-link {
+.event-card h2 {
+  margin-top: 0;
+  font-size: 1.5em;
+  color: #000000;
+}
+
+.event-card p {
+  margin: 8px 0;
+  font-size: 1em;
+  color: #000000;
+}
+
+.event-card a {
   color: #007bff;
   text-decoration: none;
 }
 
-.event-link:hover {
+.event-card a:hover {
   text-decoration: underline;
+}
+
+.event-card ul {
+  padding-left: 20px;
+  margin: 0;
+}
+
+.event-card ul li {
+  list-style-type: disc;
+  margin-bottom: 4px;
 }
 </style>

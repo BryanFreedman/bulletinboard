@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <h1>Theater Events</h1>
+    <h1>Upcoming Events</h1> 
     <button @click="$router.push('/create-event')">Create New Event</button>
     <div v-if="loading" class="loading">Loading events...</div>
     <div v-if="!loading && events.length === 0" class="no-events">No events found.</div>
@@ -26,9 +26,26 @@ export default {
   async mounted() {
     try {
       const response = await axios.get("http://localhost:8080/events/approved");
-      
-      // Filter events with status "Approved"
-      this.events = response.data.filter(event => event.status === "Approved");
+
+      // Get today's date to filter out past events
+      const today = new Date();
+
+      this.events = response.data
+        .filter(event => {
+          // Ensure event has showtimes and filter out past events
+          if (!event.showtimes || event.showtimes.length === 0) return false;
+          const latestShowtime = event.showtimes.reduce((latest, showtime) => {
+            const showDate = new Date(`${showtime.date}T${showtime.time}`);
+            return showDate > latest ? showDate : latest;
+          }, new Date(0));
+          return latestShowtime >= today;
+        })
+        .sort((a, b) => {
+          // Sort events by the earliest showtime
+          const earliestA = new Date(`${a.showtimes[0].date}T${a.showtimes[0].time}`);
+          const earliestB = new Date(`${b.showtimes[0].date}T${b.showtimes[0].time}`);
+          return earliestA - earliestB;
+        });
     } catch (error) {
       console.error("Error fetching events:", error);
     } finally {
@@ -38,10 +55,18 @@ export default {
 };
 </script>
 
-
 <style scoped>
 .home {
   padding: 16px;
+}
+
+h1 {
+  margin-top: 0; /* Remove top margin from the h1 */
+  margin-bottom: 16px; /* Add controlled space below the heading */
+}
+
+button {
+  margin-bottom: 24px; /* Adds padding below the button */
 }
 
 .event-list {
@@ -54,6 +79,6 @@ export default {
 .no-events {
   text-align: center;
   font-size: 18px;
-  color: #555;
+  color: #000000;
 }
 </style>
