@@ -66,7 +66,28 @@ h1 {
 }
 
 button {
-  margin-bottom: 24px; /* Adds padding below the button */
+  margin: 0 auto; /* Centers the button */
+  margin-bottom: 24px; /* Adds spacing below the button */
+  display: inline-block;
+  background-color: #007bff;
+  color: #ffffff;
+  padding: 12px 24px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+
+button:hover {
+  background-color: #0056b3;
+  transform: scale(1.05);
+}
+
+button:active {
+  transform: scale(0.95);
 }
 
 .event-list {

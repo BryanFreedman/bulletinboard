@@ -13,7 +13,6 @@
       <div>
         <h3>Showtimes</h3>
         <div v-for="(showtime, index) in showtimes" :key="index" class="showtime-input">
-          <!-- Date and Time Picker -->
           <vue-datepicker
             v-model="showtime.datetime"
             type="datetime"
@@ -26,7 +25,9 @@
         <button type="button" @click="addShowtime">Add Showtime</button>
       </div>
 
-      <button type="submit">Submit</button>
+      <div class="submit-container">
+        <button type="submit">Submit</button>
+      </div>
     </form>
   </div>
 </template>
@@ -34,7 +35,7 @@
 <script>
 import VueDatepicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
-import { format } from 'date-fns'; // Ensure date-fns is installed: npm install date-fns
+import { format } from 'date-fns';
 import axios from 'axios';
 
 export default {
@@ -51,7 +52,7 @@ export default {
       description: '',
       eventLink: '',
       ticketPrice: '',
-      showtimes: [{ datetime: null }], // Use null for proper handling of Date objects
+      showtimes: [{ datetime: null }],
     };
   },
   methods: {
@@ -72,15 +73,12 @@ export default {
           eventLink: this.eventLink,
           ticketPrice: this.ticketPrice,
           showtimes: this.showtimes.map((st) => ({
-            date: format(new Date(st.datetime), 'yyyy-MM-dd'), // Convert to ISO date
-            time: format(new Date(st.datetime), 'HH:mm'), // Convert to military time (24-hour format)
+            date: format(new Date(st.datetime), 'yyyy-MM-dd'),
+            time: format(new Date(st.datetime), 'HH:mm'),
           })),
         };
 
-        // Send data to the API
         await axios.post('http://localhost:8080/events', payload);
-
-        // Redirect to the home page after submission
         this.$router.push('/');
       } catch (error) {
         console.error('Error submitting form:', error);
@@ -137,5 +135,33 @@ button[type='button'] {
 
 button[type='button']:hover {
   background-color: #c82333;
+}
+
+button[type='submit'] {
+  display: block;
+  width: 200px;
+  margin: 16px auto 0; /* Add padding above */
+  padding: 12px 24px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  background-color: #28a745;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+button[type='submit']:hover {
+  background-color: #218838;
+}
+
+button[type='submit']:active {
+  transform: scale(0.95);
+}
+
+.submit-container {
+  margin-top: 32px; /* Padding between Add Showtime and Submit */
+  text-align: center;
 }
 </style>
