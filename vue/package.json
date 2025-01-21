@@ -10,9 +10,12 @@
     "lint": "eslint . --fix"
   },
   "dependencies": {
+    "@vuepic/vue-datepicker": "^11.0.1",
     "axios": "^1.7.9",
+    "date-fns": "^4.1.0",
     "vue": "^3.5.12",
-    "vue-router": "^4.4.5"
+    "vue-router": "^4.4.5",
+    "vue3-timepicker": "^1.0.0-beta.2"
   },
   "devDependencies": {
     "@eslint/js": "^9.14.0",
