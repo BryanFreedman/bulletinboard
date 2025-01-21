@@ -25,7 +25,7 @@ export default {
   },
   async mounted() {
     try {
-      const response = await axios.get("http://localhost:8080/events");
+      const response = await axios.get("http://localhost:8080/events/approved");
       
       // Filter events with status "Approved"
       this.events = response.data.filter(event => event.status === "Approved");
