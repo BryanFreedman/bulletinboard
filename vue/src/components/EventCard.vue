@@ -1,48 +1,51 @@
 <template>
   <div class="event-card">
-    <div class="flip-container">
-      <div class="flipper">
-        <!-- Front Face: Event Details -->
-        <div class="front">
-          <div class="pushpin" :style="{ backgroundColor: pushpinColor }"></div>
-          <h2>{{ event.title }}</h2>
-          <p>{{ event.description }}</p>
-          <p><strong>Company:</strong> {{ event.company_name }}</p>
-          <p>
-            <strong>Venue:</strong> {{ event.venue_name }} - {{ event.venue_address }}
-          </p>
-          <p><strong>Ticket Price:</strong> {{ event.ticket_price }}</p>
-          <p v-if="event.event_link">
-            <strong>Link:</strong>
-            <a :href="event.event_link" target="_blank" rel="noopener noreferrer">
-              {{ event.event_link }}
-            </a>
-          </p>
-          <p v-if="event.content_warnings">
-            <strong>Content Warnings:</strong> {{ event.content_warnings }}
-          </p>
-          <div v-if="event.event_dates && event.event_dates.length">
-            <strong>Event Dates:</strong>
-            <ul>
-              <li v-for="(date, index) in event.event_dates" :key="index">
-                {{ formatDate(date) }}
-              </li>
-            </ul>
-          </div>
-          <div v-if="event.accessibility && event.accessibility.length">
-            <strong>Accessibility:</strong>
-            <p>{{ event.accessibility.join(', ') }}</p>
-          </div>
-          <div v-if="event.masking_policy && event.masking_policy.length">
-            <strong>Masking:</strong>
-            <p>{{ event.masking_policy.join(', ') }}</p>
-          </div>
+    <!-- Image Section with Pushpin -->
+    <div class="image-container" v-if="event.image_url">
+      <img :src="event.image_url" alt="Event Image" />
+      <!-- Pushpin placed on top of the image, halfway hanging off the top -->
+      <div class="pushpin" :style="{ backgroundColor: pushpinColor }"></div>
+    </div>
+    <!-- Details Section -->
+    <div class="details">
+      <h2>{{ event.title }}</h2>
+      <p>{{ event.description }}</p>
+      <p><strong>Company:</strong> {{ event.company_name }}</p>
+      <p>
+        <strong>Venue:</strong>
+        {{ event.venue_name }} - {{ event.venue_address }}
+      </p>
+      <p><strong>Ticket Price:</strong> {{ event.ticket_price }}</p>
+      <p v-if="event.event_link">
+        <strong>Link:</strong>
+        <a :href="event.event_link" target="_blank" rel="noopener noreferrer">
+          {{ event.event_link }}
+        </a>
+      </p>
+      <!-- Spoiler Toggle for Content Warnings -->
+      <div v-if="event.content_warnings" class="spoiler-section">
+        <button class="spoiler-toggle" @click="toggleContentWarnings">
+          {{ showContentWarnings ? "Hide Content Warnings" : "*Show Content Warnings*" }}
+        </button>
+        <div v-if="showContentWarnings" class="content-warnings">
+          <strong>Content Warnings:</strong> {{ event.content_warnings }}
         </div>
-        <!-- Back Face: Event Image -->
-        <div class="back">
-          <img :src="event.image_url" alt="Event Image" v-if="event.image_url" />
-          <p v-else>No image available</p>
-        </div>
+      </div>
+      <div v-if="event.event_dates && event.event_dates.length">
+        <strong>Event Dates:</strong>
+        <ul>
+          <li v-for="(date, index) in event.event_dates" :key="index">
+            {{ formatDate(date) }}
+          </li>
+        </ul>
+      </div>
+      <div v-if="event.accessibility && event.accessibility.length">
+        <strong>Accessibility:</strong>
+        <p>{{ event.accessibility.join(', ') }}</p>
+      </div>
+      <div v-if="event.masking_policy && event.masking_policy.length">
+        <strong>Masking:</strong>
+        <p>{{ event.masking_policy.join(', ') }}</p>
       </div>
     </div>
   </div>
@@ -67,7 +70,8 @@ export default {
         "#28a745", // green
         "#007bff"  // blue
       ],
-      pushpinColor: ""
+      pushpinColor: "",
+      showContentWarnings: false
     };
   },
   created() {
@@ -75,6 +79,9 @@ export default {
     this.pushpinColor = this.availableColors[randomIndex];
   },
   methods: {
+    toggleContentWarnings() {
+      this.showContentWarnings = !this.showContentWarnings;
+    },
     formatDate(dateTime) {
       return new Date(dateTime).toLocaleString("en-US", {
         year: "numeric",
@@ -89,72 +96,39 @@ export default {
 </script>
 
 <style scoped>
-/* Container with perspective for 3D flip effect */
 .event-card {
-  perspective: 1000px;
   width: 400px;
   margin: 16px auto;
-}
-
-/* Flip container */
-.flip-container {
-  position: relative;
-  width: 100%;
-  transition: transform 0.6s;
-  transform-style: preserve-3d;
-}
-.event-card:hover .flip-container {
-  transform: rotateY(180deg);
-}
-
-/* Flipper */
-.flipper {
-  position: relative;
-  width: 100%;
-  height: 100%;
-}
-
-/* Front and Back Faces */
-.front, .back {
-  position: absolute;
-  width: 100%;
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
-  top: 0;
-  left: 0;
-  padding: 16px;
-  border: 1px solid #ddd;
   background: #fff;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-  border-radius: 8px;
+  border: 10px solid #ffffff;
+  /* Remove or change overflow so the pushpin is not clipped */
+  overflow: visible;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-/* Front Face */
-.front {
-  z-index: 2;
+/* Image container now acts as a positioning context */
+.image-container {
+  position: relative;
+  width: 100%;
+}
+.image-container img {
+  width: 100%;
+  display: block;
 }
 
-/* Back Face: Flip it */
-.back {
-  transform: rotateY(180deg);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-}
-
-/* Pushpin styling */
+/* Pushpin styling - positioned so that it's halfway hanging off the top */
+/* Assuming a 24px pushpin, set top to -12px */
 .pushpin {
   position: absolute;
-  top: -12px;
+  top: -20px;
   left: 50%;
   transform: translateX(-50%);
   width: 24px;
   height: 24px;
   border-radius: 50%;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   border: 2px solid #fff;
-  z-index: 3;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  z-index: 2;
 }
 .pushpin::before {
   content: '';
@@ -168,9 +142,34 @@ export default {
   border-radius: 50%;
 }
 
+/* Details section */
+.details {
+  padding: 16px;
+  margin-top: -8px; /* Reduced gap between image and details */
+}
+
+/* Spoiler styling */
+.spoiler-section {
+  margin: 12px 0;
+}
+.spoiler-toggle {
+  background: #f7f7f7;
+  border: 1px solid #ccc;
+  padding: 4px 8px;
+  cursor: pointer;
+  font-size: 0.9em;
+  margin-bottom: 8px;
+}
+.content-warnings {
+  background: #fefefe;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 8px;
+}
+
 /* Text styling */
 h2 {
-  margin-top: 32px; /* Extra space for pushpin overlap */
+  margin-top: 8px;  /* Reduced top margin */
   font-size: 1.5em;
   margin-bottom: 8px;
   color: #000;
@@ -191,12 +190,5 @@ ul {
   list-style-type: disc;
   margin-left: 20px;
   padding: 0;
-}
-
-/* Image on the back */
-.back img {
-  max-width: 100%;
-  max-height: 100%;
-  border-radius: 8px;
 }
 </style>
