@@ -1,173 +1,304 @@
 <template>
   <div class="event-form">
-    <h1>Create Event</h1>
-    <form @submit.prevent="submitForm">
-      <input v-model="title" placeholder="Event Title" required />
-      <input v-model="location" placeholder="Location" required />
-      <input v-model="companyName" placeholder="Company Name" required />
-      <input v-model="emailAddress" type="email" placeholder="Email Address" required />
-      <textarea v-model="description" placeholder="Description" required></textarea>
-      <input v-model="eventLink" placeholder="Event Link (optional)" />
-      <input v-model="ticketPrice" placeholder="Ticket Price (e.g., Free, $20)" required />
+    <h2>Submit a New Event</h2>
+    <form @submit.prevent="submitEvent">
+      
+      <!-- Event Title -->
+      <label for="title">Event Title:</label>
+      <input type="text" id="title" v-model="event.title" required />
 
-      <div>
-        <h3>Showtimes</h3>
-        <div v-for="(showtime, index) in showtimes" :key="index" class="showtime-input">
-          <vue-datepicker
-            v-model="showtime.datetime"
-            type="datetime"
-            :is-24="false" 
-            placeholder="Select Date & Time"
-            required
-          />
-          <button type="button" @click="removeShowtime(index)">Remove</button>
-        </div>
-        <button type="button" @click="addShowtime">Add Showtime</button>
+      <!-- Description -->
+      <label for="description">Description:</label>
+      <textarea id="description" v-model="event.description" required></textarea>
+
+      <!-- Company Name -->
+      <label for="company_name">Company Name:</label>
+      <input type="text" id="company_name" v-model="event.company_name" required />
+
+      <!-- Venue Name -->
+      <label for="venue_name">Venue Name:</label>
+      <input type="text" id="venue_name" v-model="event.venue_name" required />
+
+      <!-- Venue Address -->
+      <label for="venue_address">Venue Address:</label>
+      <input type="text" id="venue_address" v-model="event.venue_address" required />
+
+      <!-- Ticket Price -->
+      <label for="ticket_price">Ticket Price:</label>
+      <input type="text" id="ticket_price" v-model="event.ticket_price" required />
+
+      <!-- Event Link -->
+      <label for="event_link">Event Link:</label>
+      <input type="url" id="event_link" v-model="event.event_link" />
+
+      <!-- Contact Email -->
+      <label for="email">Contact Email: (Will not be publicly displayed)</label>
+      <input type="email" id="email" v-model="event.email_address" required />
+
+      <!-- Image Upload -->
+      <label for="image">Upload Event Image:</label>
+      <input type="file" id="image" @change="handleImageUpload" accept="image/*" />
+
+     <!-- Event Date & Time Selection -->
+      <label for="event_datetime">Event Date & Time:</label>
+      <div class="date-time-input">
+        <input type="datetime-local" id="event_datetime" v-model="newDateTime" />
+        <button type="button" @click="addDateTime" :disabled="!newDateTime">Add Date & Time</button>
       </div>
 
-      <div class="submit-container">
-        <button type="submit">Submit</button>
-      </div>
+      <ul>
+        <li v-for="(date, index) in event.event_dates" :key="index">
+          {{ formatDate(date) }}
+          <button type="button" @click="removeDate(index)">X</button>
+        </li>
+      </ul>
+
+      <!-- Accessibility Options -->
+      <fieldset class="accessibility-fieldset">
+  <legend>Accessibility Features:</legend>
+  <div class="accessibility-options">
+  <div 
+    v-for="option in accessibilityOptions" 
+    :key="option.id" 
+    class="accessibility-option"
+  >
+    <input type="checkbox" :id="option.id" :value="option.id" v-model="event.accessibilityOptions" />
+    <label :for="option.id">{{ option.name }}</label>
+  </div>
+</div>
+
+
+  <!-- Other Accessibility Option -->
+  <label for="other_accessibility">Other Accessibility Features:</label>
+  <input 
+    type="text" 
+    id="other_accessibility" 
+    v-model="event.other_accessibility" 
+    placeholder="Specify other accessibility features" 
+  />
+</fieldset>
+
+
+
+
+
+      <!-- Masking Requirements -->
+<fieldset class="masking-fieldset">
+  <legend>Masking Requirements:</legend>
+  <div class="masking-options">
+    <div class="masking-option">
+      <input type="checkbox" id="masks_all" value="Masks Required for All Performances" v-model="event.masking_policy" />
+      <label for="masks_all">Masks Required for All Performances</label>
+    </div>
+    <div class="masking-option">
+      <input type="checkbox" id="masks_some" value="Masks Required for Some Performances" v-model="event.masking_policy" />
+      <label for="masks_some">Masks Required for Some Performances</label>
+    </div>
+    <div class="masking-option">
+      <input type="checkbox" id="no_masks" value="No Mask Requirement" v-model="event.masking_policy" />
+      <label for="no_masks">No Mask Requirement</label>
+    </div>
+  </div>
+</fieldset>
+
+
+      <!-- Content Warnings -->
+      <label for="content_warnings">Content Warnings:</label>
+      <textarea id="content_warnings" v-model="event.content_warnings"></textarea>
+
+      <!-- Submit Button -->
+      <button type="submit">Submit Event</button>
     </form>
   </div>
 </template>
 
 <script>
-import VueDatepicker from '@vuepic/vue-datepicker';
-import '@vuepic/vue-datepicker/dist/main.css';
-import { format } from 'date-fns';
-import axios from 'axios';
+import axios from "axios";
 
 export default {
-  name: 'EventForm',
-  components: {
-    VueDatepicker,
-  },
   data() {
-    return {
-      title: '',
-      location: '',
-      companyName: '',
-      emailAddress: '',
-      description: '',
-      eventLink: '',
-      ticketPrice: '',
-      showtimes: [{ datetime: null }],
-    };
-  },
+  return {
+    event: {
+      title: "",
+      description: "",
+      company_name: "",
+      venue_name: "",
+      venue_address: "",
+      ticket_price: "",
+      event_link: "https://",
+      email_address: "",
+      content_warnings: "",
+      image: null,
+      event_dates: [],
+      accessibilityOptions: [], // Changed from accessibility to accessibilityOptions
+      other_accessibility: "",
+      masking_policy: []
+    },
+    newDateTime: "",
+    accessibilityOptions: [
+      { id: "wheelchair", name: "Wheelchair Accessible" },
+      { id: "closed_caption", name: "Closed Captions" },
+      { id: "open_caption", name: "Open Captions" },
+      { id: "audio_description", name: "Audio Description" },
+      { id: "sign_language", name: "ASL Interpreting" },
+      { id: "strobe_warning", name: "STROBE WARNING" }
+    ]
+  };
+},
   methods: {
-    addShowtime() {
-      this.showtimes.push({ datetime: null });
-    },
-    removeShowtime(index) {
-      this.showtimes.splice(index, 1);
-    },
-    async submitForm() {
-      try {
-        const payload = {
-          title: this.title,
-          location: this.location,
-          companyName: this.companyName,
-          emailAddress: this.emailAddress,
-          description: this.description,
-          eventLink: this.eventLink,
-          ticketPrice: this.ticketPrice,
-          showtimes: this.showtimes.map((st) => ({
-            date: format(new Date(st.datetime), 'yyyy-MM-dd'),
-            time: format(new Date(st.datetime), 'HH:mm'),
-          })),
-        };
-
-        await axios.post('http://localhost:8080/events', payload);
-        this.$router.push('/');
-      } catch (error) {
-        console.error('Error submitting form:', error);
-        alert('There was an error submitting the form. Please try again.');
+    addDateTime() {
+      if (this.newDateTime && !this.event.event_dates.includes(this.newDateTime)) {
+        this.event.event_dates.push(this.newDateTime);
+        this.newDateTime = ""; // Reset input
       }
     },
-  },
+    removeDate(index) {
+      this.event.event_dates.splice(index, 1);
+    },
+    formatDate(dateTime) {
+      return new Date(dateTime).toLocaleString("en-US", { 
+        year: "numeric", 
+        month: "long", 
+        day: "numeric", 
+        hour: "2-digit", 
+        minute: "2-digit" 
+      });
+    },
+    async submitEvent() {
+      try {
+        const jsonData = {
+          ...this.event,
+          event_dates: this.event.event_dates.map(date => new Date(date).toISOString()), // Convert to ISO
+        };
+
+        await axios.post("http://localhost:9000/events", jsonData, {
+          headers: { "Content-Type": "application/json" },
+        });
+
+        alert("Event submitted successfully!");
+        this.$router.push("/");
+      } catch (error) {
+        console.error("Error submitting event:", error);
+        alert("Failed to submit event.");
+      }
+    }
+  }
 };
+
 </script>
 
 <style scoped>
 .event-form {
-  padding: 32px; /* Increase padding to provide space inside the form */
-  max-width: 600px; /* Set a specific maximum width for the form */
-  margin: 32px auto; /* Center the form and add vertical margin */
-  background-color: #f9f9f9; /* Set the background color */
-  
-  border: 1px solid #ddd; /* Add a border around the form */
-  /* border-radius: 8px; Round the corners for a polished look */
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-.event-form input,
-.event-form textarea {
-  display: block; /* Ensure each field starts on a new line */
-  width: calc(100% - 32px); /* Reduce width slightly to account for padding */
-  margin-bottom: 16px; /* Add spacing between fields */
-  padding: 12px; /* Add inner padding for text fields */
-  border: 1px solid #ccc; /* Add a light border */
-  border-radius: 4px; /* Round the corners of input fields */
-  box-sizing: border-box; /* Include padding and border in width calculation */
-  font-family: Arial, Helvetica, sans-serif;
+label {
+  display: block;
+  margin: 10px 0 5px;
 }
 
-.showtime-input {
-  display: flex;
-  gap: 16px; /* Increase spacing between date and time fields */
-  margin-bottom: 16px; /* Add spacing below each showtime input */
-  font-family: Arial, Helvetica, sans-serif;
+input, textarea {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
 }
 
 button {
-  padding: 12px 24px; /* Add padding for better clickability */
-  background-color: #007bff; /* Primary button color */
-  color: #fff; /* White text color */
-  border: none; /* Remove default borders */
-  border-radius: 8px; /* Round the corners of buttons */
-  cursor: pointer; /* Change the cursor to a pointer on hover */
-  transition: background-color 0.3s ease, transform 0.2s ease; /* Smooth transitions */
+  background-color: #ffec80;
+  color: black;
+  padding: 12px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
 button:hover {
-  background-color: #0056b3; /* Darken the button color on hover */
+  background-color: #FED800;
 }
 
-button[type='button'] {
-  background-color: #dc3545; /* Red background for remove buttons */
-  margin-left: 8px; /* Add spacing to the left */
+/* Normalize checkbox sizes */
+input[type="checkbox"] {
+  width: 16px; /* Set consistent width */
+  height: 16px; /* Set consistent height */
+  margin: 0; /* Remove default margins */
+  padding: 0; /* Remove default padding */
+  display: inline-block;
+  vertical-align: middle; /* Align with text */
 }
 
-button[type='button']:hover {
-  background-color: #c82333; /* Darker red on hover */
+/* General Fieldset Styling */
+fieldset {
+  margin: 16px 0;
+  padding: 0;
+  border: none;
 }
 
-button[type='submit'] {
-  display: block; /* Center the submit button */
-  width: 200px; /* Set a fixed width */
-  margin: 32px auto 0; /* Center horizontally and add space above */
-  padding: 16px; /* Add more padding for larger appearance */
-  font-size: 1.2rem; /* Increase font size */
-  font-weight: bold; /* Make the text bold */
-  background-color: #28a745; /* Green background */
-  color: #fff; /* White text color */
-  border: none; /* Remove borders */
-  border-radius: 8px; /* Round the corners */
-  transition: background-color 0.3s ease, transform 0.2s ease; /* Smooth transitions */
+/* Accessibility & Masking Fieldsets */
+.accessibility-fieldset, .masking-fieldset {
+  font-size: 1rem;
+  margin: 16px 0;
 }
 
-button[type='submit']:hover {
-  background-color: #218838; /* Darker green on hover */
+.accessibility-options, .masking-options {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* 3 equal columns */
+  gap: 12px; /* Space between grid items */
+  margin-bottom: 16px;
 }
 
-button[type='submit']:active {
-  transform: scale(0.95); /* Add a slight "pressed" effect */
+.accessibility-option, .masking-option {
+  display: flex;
+  align-items: center; /* Align checkbox and label vertically */
+  gap: 10px; /* Space between checkbox and label */
 }
 
-.submit-container {
-  margin-top: 32px; /* Add spacing above the submit button */
-  text-align: center; /* Center-align the button */
+/* Add vertical dividers between columns */
+.accessibility-option:not(:nth-child(3n)),
+.masking-option:not(:nth-child(3n)) {
+  border-right: 1px solid #ccc; /* Add divider */
+  padding-right: 12px; /* Space between divider and text */
 }
+
+/* Align 'Other Accessibility Features' text input */
+.accessibility-fieldset input[type="text"] {
+  grid-column: span 3; /* Stretch across all columns */
+}
+
+/* Button Alignment */
+button {
+  margin-top: 16px;
+  padding: 12px 20px;
+  background-color: #ffec80;
+  color: black;
+  font-size: 1.1rem;
+  font-weight: bold;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+button:hover {
+  background-color: #fed800;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .accessibility-options, .masking-options {
+    grid-template-columns: repeat(2, 1fr); /* 2 columns for smaller screens */
+  }
+}
+
+
+
 
 </style>

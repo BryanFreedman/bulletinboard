@@ -1,26 +1,49 @@
 <template>
   <div class="event-card">
-    <div class="pushpin"></div>
-    <h2>{{ event.title }}</h2>
-    <p>{{ event.description }}</p>
-    <p><strong>Location:</strong> {{ event.location }}</p>
-    <p><strong>Company:</strong> {{ event.companyName }}</p>
-    <p><strong>Ticket Price:</strong> {{ event.ticketPrice }}</p>
-
-    <!-- Event Link -->
-    <p v-if="event.eventLink">
-      <strong>Link: </strong>
-      <a :href="event.eventLink" target="_blank" rel="noopener noreferrer">{{ event.eventLink }}</a>
-    </p>
-
-    <!-- Showtimes -->
-    <div>
-      <strong>Showtimes:</strong>
-      <ul>
-        <li v-for="(showtime, index) in event.showtimes" :key="index">
-          {{ formatShowtime(showtime.date, showtime.time) }}
-        </li>
-      </ul>
+    <div class="flip-container">
+      <div class="flipper">
+        <!-- Front Face: Event Details -->
+        <div class="front">
+          <div class="pushpin" :style="{ backgroundColor: pushpinColor }"></div>
+          <h2>{{ event.title }}</h2>
+          <p>{{ event.description }}</p>
+          <p><strong>Company:</strong> {{ event.company_name }}</p>
+          <p>
+            <strong>Venue:</strong> {{ event.venue_name }} - {{ event.venue_address }}
+          </p>
+          <p><strong>Ticket Price:</strong> {{ event.ticket_price }}</p>
+          <p v-if="event.event_link">
+            <strong>Link:</strong>
+            <a :href="event.event_link" target="_blank" rel="noopener noreferrer">
+              {{ event.event_link }}
+            </a>
+          </p>
+          <p v-if="event.content_warnings">
+            <strong>Content Warnings:</strong> {{ event.content_warnings }}
+          </p>
+          <div v-if="event.event_dates && event.event_dates.length">
+            <strong>Event Dates:</strong>
+            <ul>
+              <li v-for="(date, index) in event.event_dates" :key="index">
+                {{ formatDate(date) }}
+              </li>
+            </ul>
+          </div>
+          <div v-if="event.accessibility && event.accessibility.length">
+            <strong>Accessibility:</strong>
+            <p>{{ event.accessibility.join(', ') }}</p>
+          </div>
+          <div v-if="event.masking_policy && event.masking_policy.length">
+            <strong>Masking:</strong>
+            <p>{{ event.masking_policy.join(', ') }}</p>
+          </div>
+        </div>
+        <!-- Back Face: Event Image -->
+        <div class="back">
+          <img :src="event.image_url" alt="Event Image" v-if="event.image_url" />
+          <p v-else>No image available</p>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -34,44 +57,93 @@ export default {
       required: true,
     },
   },
-  methods: {
-    formatShowtime(date, time) {
-      const dateParts = date.split("-");
-      const localDate = new Date(dateParts[0], dateParts[1] - 1, dateParts[2]);
-
-      const options = { year: "numeric", month: "long", day: "numeric" };
-      const formattedDate = localDate.toLocaleDateString("en-US", options);
-
-      const formattedTime = new Date(`1970-01-01T${time}`).toLocaleTimeString("en-US", {
-        hour: "2-digit",
-        minute: "2-digit",
-        hour12: true,
-      });
-
-      return `${formattedDate} at ${formattedTime}`;
-    },
+  data() {
+    return {
+      availableColors: [
+        "#dc3545", // red
+        "#fd7e14", // orange
+        "#ffc107", // yellow
+        "#6f42c1", // purple
+        "#28a745", // green
+        "#007bff"  // blue
+      ],
+      pushpinColor: ""
+    };
   },
+  created() {
+    const randomIndex = Math.floor(Math.random() * this.availableColors.length);
+    this.pushpinColor = this.availableColors[randomIndex];
+  },
+  methods: {
+    formatDate(dateTime) {
+      return new Date(dateTime).toLocaleString("en-US", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+        hour: "2-digit",
+        minute: "2-digit"
+      });
+    }
+  }
 };
 </script>
 
 <style scoped>
+/* Container with perspective for 3D flip effect */
 .event-card {
-  position: relative; /* For positioning the pushpin */
+  perspective: 1000px;
+  width: 400px;
+  margin: 16px auto;
+}
+
+/* Flip container */
+.flip-container {
+  position: relative;
+  width: 100%;
+  transition: transform 0.6s;
+  transform-style: preserve-3d;
+}
+.event-card:hover .flip-container {
+  transform: rotateY(180deg);
+}
+
+/* Flipper */
+.flipper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+/* Front and Back Faces */
+.front, .back {
+  position: absolute;
+  width: 100%;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  top: 0;
+  left: 0;
   padding: 16px;
   border: 1px solid #ddd;
-  /* border-radius: 12px; */
-  background-color: #fff;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  margin-bottom: 16px;
-  max-width: 400px;
-  transition: transform 0.2s, box-shadow 0.2s;
+  background: #fff;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  border-radius: 8px;
 }
 
-.event-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+/* Front Face */
+.front {
+  z-index: 2;
 }
 
+/* Back Face: Flip it */
+.back {
+  transform: rotateY(180deg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+/* Pushpin styling */
 .pushpin {
   position: absolute;
   top: -12px;
@@ -79,13 +151,11 @@ export default {
   transform: translateX(-50%);
   width: 24px;
   height: 24px;
-  background-color: #dc3545; /* Red pushpin color */
   border-radius: 50%;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   border: 2px solid #fff;
-  z-index: 1;
+  z-index: 3;
 }
-
 .pushpin::before {
   content: '';
   position: absolute;
@@ -98,34 +168,35 @@ export default {
   border-radius: 50%;
 }
 
-.event-card h2 {
-  margin-top: 24px; /* Account for pushpin overlap */
+/* Text styling */
+h2 {
+  margin-top: 32px; /* Extra space for pushpin overlap */
   font-size: 1.5em;
-  color: #000000;
+  margin-bottom: 8px;
+  color: #000;
 }
-
-.event-card p {
-  margin: 8px 0;
+p {
+  margin: 4px 0;
   font-size: 1em;
-  color: #000000;
+  color: #000;
 }
-
-.event-card a {
+a {
   color: #007bff;
   text-decoration: none;
 }
-
-.event-card a:hover {
+a:hover {
   text-decoration: underline;
 }
-
-.event-card ul {
-  padding-left: 20px;
-  margin: 0;
+ul {
+  list-style-type: disc;
+  margin-left: 20px;
+  padding: 0;
 }
 
-.event-card ul li {
-  list-style-type: disc;
-  margin-bottom: 4px;
+/* Image on the back */
+.back img {
+  max-width: 100%;
+  max-height: 100%;
+  border-radius: 8px;
 }
 </style>
