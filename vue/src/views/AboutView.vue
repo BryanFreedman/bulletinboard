@@ -30,30 +30,30 @@ main {
 margin-top: 16px;
 }
 
-/* 🎭 Masking tape effect on heading */
+
 h3 {
 font-size: 1.75rem;
 margin-bottom: 12px;
 padding: 12px 16px;
-background-image: url('@/assets/images/masking-tape-crop.png'); /* Apply tape effect */
-/* background-size: contain; Scale correctly */
+background-image: url('@/assets/images/masking-tape-crop.png'); 
+
 background-repeat: no-repeat;
 background-position: center;
 display: inline-block;
 }
 
-/* 🎨 White Background for Text */
+
 .text-container {
-background-color: white; /* White background */
-padding: 24px; /* Space inside */
-/* border-radius: 8px; Slight rounding */
-box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
-margin: 16px auto; /* Center and add spacing */
-max-width: 800px; /* Keep it a readable width */
+background-color: white; 
+padding: 24px; 
+
+box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
+margin: 16px auto; 
+max-width: 800px;
 }
 
 .text-container p {
 line-height: 1.6;
-margin-bottom: 12px; /* Adds spacing between paragraphs */
+margin-bottom: 12px; 
 }
 </style>

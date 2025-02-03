@@ -40,7 +40,7 @@ const routes = [
     name: 'create-event',
     component: EventForm,
     meta: {
-      requiresAuth: false
+      requiresAuth: true
     }
   },
   {

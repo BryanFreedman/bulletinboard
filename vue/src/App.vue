@@ -1,15 +1,15 @@
 
 <template>
-  <div id="capstone-app">
+  <div id="bulletin-app">
     <div id="nav-wrapper">
       <SiteHeader />
       <div id="nav">
-        <router-link v-bind:to="{ name: 'home' }">Home</router-link>&nbsp;|&nbsp;
-        <router-link v-bind:to="{ name: 'about' }">About</router-link>&nbsp;|&nbsp;
+        <router-link v-bind:to="{ name: 'home' }">HOME</router-link>&nbsp;|&nbsp;
+        <router-link v-bind:to="{ name: 'about' }">ABOUT</router-link>&nbsp;|&nbsp;
 
         <!-- Show Login when user is NOT logged in, Logout when logged in -->
-        <router-link v-bind:to="{ name: 'login' }" v-if="!isLoggedIn">Login</router-link>
-        <router-link v-bind:to="{ name: 'logout' }" v-if="isLoggedIn" @click="logout">Logout</router-link>
+        <router-link v-bind:to="{ name: 'login' }" v-if="!isLoggedIn">LOG IN</router-link>
+        <router-link v-bind:to="{ name: 'logout' }" v-if="isLoggedIn" @click="logout">LOG OUT</router-link>
       </div>
     </div>
     <router-view />
@@ -45,6 +45,27 @@ export default {
 </script>
 
 <style>
+@font-face {
+  font-family: 'Kalam';
+  src: url('@/assets/fonts/Kalam/Kalam-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Kalam';
+  src: url('@/assets/fonts/Kalam/Kalam-Light.ttf') format('truetype');
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Kalam';
+  src: url('@/assets/fonts/Kalam/Kalam-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+}
+
 body {
   margin: 0;
   padding: 0;
@@ -53,8 +74,10 @@ body {
   background-repeat: no-repeat;
   background-attachment: fixed;
   background-position: center;
-  font-family: 'Arial', sans-serif;
+  font-family: 'Kalam';
 }
+
+
 
 /* Wrapper for Header & Nav */
 #nav-wrapper {

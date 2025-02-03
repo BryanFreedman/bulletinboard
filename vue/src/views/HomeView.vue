@@ -1,7 +1,7 @@
 <template>
   <div class="home">
-    <h1>Upcoming Events</h1> 
-    <button @click="$router.push('/create-event')">Submit New Event</button>
+    <h1>UPCOMING EVENTS in NEW YORK</h1> 
+    <button @click="$router.push('/create-event')">SUBMIT YOUR EVENT!</button>
     <div v-if="loading" class="loading">Loading events...</div>
     <div v-if="!loading && events.length === 0" class="no-events">No events found.</div>
     <div v-if="!loading" class="event-list">
@@ -27,14 +27,15 @@ export default {
   try {
     const response = await axios.get(`${import.meta.env.VITE_REMOTE_API}/events`);
 
-    // Get today's date to filter out past events (if desired)
+    // Get today's date to filter out past events 
     const today = new Date();
 
     this.events = response.data
       .filter(event => {
-        // Instead of checking event.showtimes, check event_dates
+        
         if (!event.event_dates || event.event_dates.length === 0) return false;
-        // (Optional) Filter based on the earliest event_date
+        
+
         const earliestDate = new Date(Math.min(...event.event_dates.map(date => new Date(date).getTime())));
         return earliestDate >= today;
       })
@@ -55,38 +56,39 @@ export default {
 <style scoped>
 .home {
   padding: 16px;
-  display: flex; /* Enable flexbox */
-  flex-direction: column; /* Stack children vertically */
-  align-items: center; /* Center-align children horizontally */
+  display: flex; 
+  flex-direction: column; 
+  align-items: center; 
 }
 
 h1 {
   margin-top: 0;
   margin-bottom: 16px;
-  color: #000; /* Make the text color contrast well */
+  color: #000; 
   background-image: url('@/assets/images/masking-tape-crop.png');
-  background-size: cover; /* Ensure the image scales to fit */
-  background-repeat: no-repeat; /* Prevent repetition */
-  background-position: center; /* Center the image */
-  padding: 12px 16px; /* Add spacing around the text */
-  /* border-radius: 8px; Add slight rounding to the edges */
-  display: inline-block; /* Wrap the content to only the heading's size */
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Optional: Add a shadow for emphasis */
+  background-size: cover; 
+  background-repeat: no-repeat; 
+  background-position: center; 
+  padding: 12px 16px; 
+ 
+  display: inline-block; 
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
 }
 
 
 
 button {
-  margin-bottom: 24px; /* Adds spacing below the button */
+  margin-bottom: 24px; 
   background-color: #ffec80;
   color: #000000;
   padding: 12px 24px;
   font-size: 1.2rem;
   font-weight: bold;
+  font-family: 'Kalam', sans-serif;
   border: none;
   cursor: pointer;
   transition: background-color 0.3s ease, transform 0.2s ease;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Optional: Add shadow for emphasis */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
 }
 
 
@@ -111,12 +113,12 @@ button:active {
   text-align: center;
   font-size: 18px;
   color: #000000;
-  background-color: white; /* White background */
-  padding: 12px 16px; /* Add padding for better spacing */
-  border-radius: 8px; /* Optional: rounded corners */
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Optional: subtle shadow */
-  display: inline-block; /* Make it wrap around the text */
-  margin-top: 16px; /* Add some spacing */
+  background-color: white; 
+  padding: 12px 16px; 
+  border-radius: 8px; 
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
+  display: inline-block; 
+  margin-top: 16px; 
 }
 </style>
 

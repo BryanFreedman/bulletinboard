@@ -1,6 +1,7 @@
 <template>
   <div class="event-form">
     <h2>Submit a New Event</h2>
+    <h3>Please allow up to two days for the event to be moderated and approved. ITB is currently only available for New York.</h3>
     <form @submit.prevent="submitEvent">
       
       <!-- Event Title -->
@@ -40,7 +41,7 @@
       <input type="file" id="image" @change="handleImageUpload" accept="image/*" />
 
      <!-- Event Date & Time Selection -->
-      <label for="event_datetime">Event Date & Time:</label>
+      <label for="event_datetime">Event Date & Time: (select a date/time and then click "Add Date and Time")</label>
       <div class="date-time-input">
         <input type="datetime-local" id="event_datetime" v-model="newDateTime" />
         <button type="button" @click="addDateTime" :disabled="!newDateTime">Add Date & Time</button>
@@ -225,17 +226,17 @@ button:hover {
   background-color: #FED800;
 }
 
-/* Normalize checkbox sizes */
+
 input[type="checkbox"] {
-  width: 16px; /* Set consistent width */
-  height: 16px; /* Set consistent height */
-  margin: 0; /* Remove default margins */
-  padding: 0; /* Remove default padding */
+  width: 16px; 
+  height: 16px; 
+  margin: 0; 
+  padding: 0; 
   display: inline-block;
-  vertical-align: middle; /* Align with text */
+  vertical-align: middle; 
 }
 
-/* General Fieldset Styling */
+
 fieldset {
   margin: 16px 0;
   padding: 0;
@@ -250,27 +251,27 @@ fieldset {
 
 .accessibility-options, .masking-options {
   display: grid;
-  grid-template-columns: repeat(3, 1fr); /* 3 equal columns */
-  gap: 12px; /* Space between grid items */
+  grid-template-columns: repeat(3, 1fr); 
+  gap: 12px; 
   margin-bottom: 16px;
 }
 
 .accessibility-option, .masking-option {
   display: flex;
-  align-items: center; /* Align checkbox and label vertically */
-  gap: 10px; /* Space between checkbox and label */
+  align-items: center; 
+  gap: 10px; 
 }
 
-/* Add vertical dividers between columns */
+/* vertical dividers */
 .accessibility-option:not(:nth-child(3n)),
 .masking-option:not(:nth-child(3n)) {
-  border-right: 1px solid #ccc; /* Add divider */
-  padding-right: 12px; /* Space between divider and text */
+  border-right: 1px solid #ccc; 
+  padding-right: 12px;
 }
 
 /* Align 'Other Accessibility Features' text input */
 .accessibility-fieldset input[type="text"] {
-  grid-column: span 3; /* Stretch across all columns */
+  grid-column: span 3; 
 }
 
 /* Button Alignment */

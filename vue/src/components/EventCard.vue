@@ -17,7 +17,7 @@
       </p>
       <p><strong>Ticket Price:</strong> {{ event.ticket_price }}</p>
       <p v-if="event.event_link">
-        <strong>Link:</strong>
+        <strong>Link: </strong>
         <a :href="event.event_link" target="_blank" rel="noopener noreferrer">
           {{ event.event_link }}
         </a>
@@ -101,7 +101,7 @@ export default {
   margin: 16px auto;
   background: #fff;
   border: 10px solid #ffffff;
-  /* Remove or change overflow so the pushpin is not clipped */
+  
   overflow: visible;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
@@ -116,8 +116,6 @@ export default {
   display: block;
 }
 
-/* Pushpin styling - positioned so that it's halfway hanging off the top */
-/* Assuming a 24px pushpin, set top to -12px */
 .pushpin {
   position: absolute;
   top: -20px;
@@ -145,7 +143,7 @@ export default {
 /* Details section */
 .details {
   padding: 16px;
-  margin-top: -8px; /* Reduced gap between image and details */
+  margin-top: -8px;
 }
 
 /* Spoiler styling */
@@ -169,7 +167,7 @@ export default {
 
 /* Text styling */
 h2 {
-  margin-top: 8px;  /* Reduced top margin */
+  margin-top: 8px;  
   font-size: 1.5em;
   margin-bottom: 8px;
   color: #000;

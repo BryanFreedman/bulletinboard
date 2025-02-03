@@ -2,7 +2,7 @@
     <header class="site-header">
       <div id="site-title">
         <router-link v-bind:to="{ name: 'home' }">
-          <h1>Indie Theatre Bulletin</h1>
+          <h1>INDIE THEATRE BULLETIN</h1>
         </router-link>
       </div>
       <div id="nav">
@@ -18,50 +18,50 @@
   
   <style scoped>
   .site-header {
-    padding: 8px 16px; /* Padding around the header */
+    padding: 8px 16px; 
     display: flex;
-    align-items: center; /* Vertically aligns items */
-    justify-content: space-between; /* Pushes title and nav to opposite ends */
-    width: 100%; /* Ensures the header spans the full width of the viewport */
-    box-sizing: border-box; /* Ensures padding is included in width */
-    /* background-color: rgb(255, 255, 255); Fallback color */
-    background-image: url('@/assets/images/paper-texture.jpg'); /* Path to your paper texture image */
-    background-size: cover; /* Ensures the texture covers the header area */
-    background-repeat: no-repeat; /* Prevents tiling */
-    background-position: center; /* Centers the texture */
-    border-bottom: 1px solid #ddd; /* Optional: Add a subtle border for better separation */
+    align-items: center; 
+    justify-content: space-between; 
+    width: 100%; 
+    box-sizing: border-box; 
+    background-color: rgb(255, 255, 255); 
+    /* background-image: url('@/assets/images/paper-texture.jpg');  */
+    background-size: cover; 
+    background-repeat: no-repeat; 
+    background-position: center; 
+    border-bottom: 1px solid #ddd; 
   }
   
   #site-title {
-    margin: 0; /* Removes default margin */
+    margin: 0; 
   }
   
   #site-title h1 {
-    margin: 0; /* Removes any extra margin around the heading */
+    margin: 0; 
   }
   
   #site-title a {
     text-decoration: none;
-    color: inherit; /* Use the current text color */
+    color: inherit; 
   }
   
   #site-title a:hover {
-    text-decoration: underline; /* Adds underline on hover */
+    text-decoration: underline; 
   }
   
   #header-nav {
     display: flex;
-    gap: 16px; /* Space between navigation links */
+    gap: 16px;
   }
   
   #header-nav a {
     text-decoration: none;
-    color: inherit; /* Uses the current text color */
+    color: inherit; 
     font-weight: bold;
   }
   
   #header-nav a:hover {
-    text-decoration: underline; /* Adds underline on hover */
+    text-decoration: underline; 
   }
   </style>
   
